@@ -32,7 +32,7 @@ public class MidiPlayer{
                 return;
             } 
             trans = sequencer.getTransmitter();
-            // synth   = MidiSystem.getSynthesizer();
+            synth   = MidiSystem.getSynthesizer();
             
             receiver = sequencer.getReceiver(); 
             trans.setReceiver(receiver);  
@@ -77,5 +77,12 @@ public class MidiPlayer{
 
     public static String getNote() {
         return note;
+    }
+    public void playMsg(MidiMessage msg){
+        try {
+            sequencer.getTransmitter().getReceiver().send(msg, -1);
+        } catch (MidiUnavailableException ex) {
+            Logger.getLogger(MidiPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
