@@ -13,16 +13,24 @@ package hilos;
 import java.net.*;
 import java.io.*;
 import java.util.*;
+import midi.MidiPlayer;
 public class Cliente 
     { 
+        MidiPlayer midi;
     Scanner entrada;          
      Cliente()     {	 
        entrada = new Scanner(System.in);         
        try         {             
                       Socket skCliente = new Socket ("localhost", 5000);             			
                       System.out.println("Introduce tu Nombre:");			 
-                      String nombre=entrada.next();						
-                      Escribir hilo1 =new Escribir(skCliente,nombre);  //hilo que escribe se envía el nombre ingresado por el cliente y el socket 
+                      String nombre=entrada.next();	
+                      if(nombre.equals("master")){
+                        midi=new MidiPlayer();
+                        System.out.println("cual?");
+                        String path=entrada.next(); 
+                        midi.play("res/"+path);
+                      }
+                      Escribir hilo1 =new Escribir(skCliente,nombre, midi);  //hilo que escribe se envía el nombre ingresado por el cliente y el socket 
                       Leer hilo2= new Leer(skCliente);    //hilo que lee, se envía como parámetro el Socket				   skCliente.close();         
                      }         
       catch (Exception e)    {  

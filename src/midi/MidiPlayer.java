@@ -18,6 +18,8 @@ public class MidiPlayer{
     static Synthesizer synth;
     static Receiver receiver;
     
+    static String note="";
+    
     public MidiPlayer(){
         
     }
@@ -55,8 +57,9 @@ public class MidiPlayer{
             ControllerEventListener cel = new ControllerEventListener() {
                 @Override
                 public void controlChange(ShortMessage event) {
-                    System.out.println(event.getChannel()+" "+event.getCommand()
-                    +" "+event.getData1()+" "+event.getData2());
+                    note=event.getChannel()+" "+event.getCommand()
+                    +" "+event.getData1()+" "+event.getData2();
+                    System.out.println(note);
                     
                 }
             };
@@ -72,4 +75,7 @@ public class MidiPlayer{
         }
     }  
 
+    public static String getNote() {
+        return note;
+    }
 }
