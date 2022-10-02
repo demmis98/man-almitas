@@ -42,7 +42,7 @@ class Escribir extends Thread
 				
                                 if(midi!=null){
                                     try {
-                                        flujoDOS.writeUTF("$ "+midi.getNote());
+                                        flujoDOS.writeUTF("$ "+midi.getMens());
                                     } catch (IOException ex) {
                                         Logger.getLogger(Escribir.class.getName()).log(Level.SEVERE, null, ex);
                                     }

@@ -25,6 +25,8 @@ class Leer extends Thread      // Creamos Hilo heredando de la clase Thread
 		this.socket=socket;
                 this.nombre=nombre;
                 this.midi=midi;
+                
+                    midi.initSynth();
 		start();   //Iniciar el proceso
 		}
 	public void run(){
@@ -34,17 +36,15 @@ class Leer extends Thread      // Creamos Hilo heredando de la clase Thread
 				DataInputStream flujo = new DataInputStream( aux );
                                 String msg=flujo.readUTF();
 				System.out.println(msg);
-                                if(msg.charAt(0)=='$'||msg.length()>20){
+                                if(msg.charAt(0)=='$'||msg.length()>3){
                                     String[] split=msg.split(" ");
-                                    if(split[1].equals(nombre)){
-                                        ShortMessage message = new ShortMessage();
-                                        message.setMessage(Integer.parseInt(split[1]),
-                                                Integer.parseInt(split[2]),
-                                                Integer.parseInt(split[3]),
-                                                Integer.parseInt(split[4]));
-                                        System.out.println("uwu");
-                                        midi.playMsg(message);
-                                        System.out.println("owo");
+                                    if(split[2].equals(nombre)){
+                                        if(split[1].equals("n")){
+                                            midi.playNote(Integer.parseInt(split[4])
+                                            ,Integer.parseInt(split[5]));
+                                        }else if(split[1].equals("f")){
+                                            midi.stopNote(Integer.parseInt(split[4]));
+                                        }
                                     }
                                 }
 				}

@@ -17,8 +17,11 @@ public class MidiPlayer{
     static Transmitter trans;
     static Synthesizer synth;
     static Receiver receiver;
+    static Instrument[] instr;
+    static MidiChannel[] mChannels;
     
-    static String note="";
+    static String mens;
+    static int note=0;
     
     public MidiPlayer(){
         
@@ -57,9 +60,17 @@ public class MidiPlayer{
             ControllerEventListener cel = new ControllerEventListener() {
                 @Override
                 public void controlChange(ShortMessage event) {
-                    note=event.getChannel()+" "+event.getCommand()
+                    mens="";
+                    if(event.getCommand()==176){
+                        mens+="n";
+                    }else if(event.getCommand()==ShortMessage.NOTE_OFF){
+                        mens+="f";
+                    }else{
+                        mens+="w";
+                    }
+                    mens+=" "+event.getChannel()+" "+event.getCommand()
                     +" "+event.getData1()+" "+event.getData2();
-                    System.out.println(note);
+                    System.out.println(mens);
                     
                 }
             };
@@ -75,7 +86,11 @@ public class MidiPlayer{
         }
     }  
 
-    public static String getNote() {
+    public static String getMens() {
+        return mens;
+    }
+
+    public static int getNote() {
         return note;
     }
     public void playMsg(MidiMessage msg){
@@ -84,5 +99,34 @@ public class MidiPlayer{
         } catch (MidiUnavailableException ex) {
             Logger.getLogger(MidiPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    public void initSynth() { 
+      try{
+        /* Create a new Sythesizer and open it. Most of 
+         * the methods you will want to use to expand on this 
+         * example can be found in the Java documentation here: 
+         * https://docs.oracle.com/javase/7/docs/api/javax/sound/midi/Synthesizer.html
+         */
+        Synthesizer midiSynth = MidiSystem.getSynthesizer(); 
+        midiSynth.open();
+    
+        //get and load default instrument and channel lists
+        instr = midiSynth.getDefaultSoundbank().getInstruments();
+        mChannels = midiSynth.getChannels();
+        
+        midiSynth.loadInstrument(instr[0]);//load an instrument
+    
+   
+    
+    
+      } catch (MidiUnavailableException e) {
+         e.printStackTrace();
+      }
+    }
+    public void playNote(int note,int vel){
+        mChannels[0].noteOn(note, vel);//On channel 0, play note number 60 with velocity 100 
+    }
+    public void stopNote(int note){
+        mChannels[0].noteOff(note, 100);//On channel 0, play note number 60 with velocity 100 
     }
 }
